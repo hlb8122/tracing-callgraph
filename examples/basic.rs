@@ -1,10 +1,3 @@
-# tracing-callgraph
-
-A [tracing](https://github.com/tokio-rs/tracing/) library for generating call graphs in [Graphviz](http://www.graphviz.org/) `dot` representation.
-
-## Example
-
-```rust
 use tracing_callgraph::GraphLayer;
 use tracing_subscriber::{prelude::*, registry::Registry};
 
@@ -34,20 +27,3 @@ fn main() {
     outer_a();
     outer_b();
 }
-```
-
-**Output**
-
-```
-digraph {
-    0 [ label = "\"outer_a\"" ]
-    1 [ label = "\"inner\"" ]
-    2 [ label = "\"outer_b\"" ]
-    0 -> 1 [ label = "1" ]
-    2 -> 1 [ label = "1" ]
-}
-```
-
-### Special Thanks
-
-Special thanks to the authors of [tracing-flame](https://github.com/tokio-rs/tracing/tree/master/tracing-flame) which this draws on heavily.

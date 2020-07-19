@@ -1,0 +1,15 @@
+[package]
+name = "tracing-callgraph"
+version = "0.1.0-alpha.0"
+authors = ["Harry Barber <harrybarber@protonmail.co.uk>"]
+edition = "2018"
+
+
+[features]
+default = ["smallvec"]
+smallvec = ["tracing-subscriber/smallvec"]
+
+[dependencies]
+tracing-subscriber = { version = "0.2.5", default-features = false, features = ["registry", "fmt"] }
+tracing = "0.1.15"
+petgraph = "0.5.1"
