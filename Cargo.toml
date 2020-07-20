@@ -3,7 +3,15 @@ name = "tracing-callgraph"
 version = "0.1.0-alpha.0"
 authors = ["Harry Barber <harrybarber@protonmail.co.uk>"]
 edition = "2018"
-
+license = "MIT"
+homepage = "https://github.com/hlb8122/tracing-callgraph"
+repository = "https://github.com/hlb8122/tracing-callgraph"
+keywords = ["tracing", "graph", "callgraph"]
+description = """
+A tracing library for generating call graphs from spans.
+"""
+categories = ["development-tools"]
+exclude = ["/.github"]
 
 [features]
 default = ["smallvec"]
