@@ -68,20 +68,15 @@ pub use error::Error;
 pub use petgraph::dot::Config;
 
 use error::Kind;
-use petgraph::dot::Dot;
-use petgraph::graphmap::GraphMap;
-use petgraph::Directed;
-use std::fs::File;
-use std::io::BufWriter;
-use std::io::Write;
-use std::path::Path;
-use std::sync::Arc;
-use std::sync::Mutex;
-use tracing::span;
-use tracing::Subscriber;
-use tracing_subscriber::layer::Context;
-use tracing_subscriber::registry::LookupSpan;
-use tracing_subscriber::Layer;
+use petgraph::{dot::Dot, graphmap::GraphMap, Directed};
+use std::{
+    fs::File,
+    io::{BufWriter, Write},
+    path::Path,
+    sync::{Arc, Mutex},
+};
+use tracing::{span, Subscriber};
+use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
 mod error;
 
@@ -166,14 +161,20 @@ where
     }
 }
 
-impl GraphLayer {
-    /// Returns a new [`GraphLayer`] which constructs the call graph.
-    pub fn new() -> Self {
+impl Default for GraphLayer {
+    fn default() -> Self {
         let graph = CallGraph::new();
         Self {
             graph: Arc::new(Mutex::new(graph)),
             top_node: None,
         }
+    }
+}
+
+impl GraphLayer {
+    /// Returns a new [`GraphLayer`] which constructs the call graph.
+    pub fn new() -> Self {
+        Default::default()
     }
 
     /// Returns a [`FlushGuard`] which will flush the `GraphLayer`'s writer when
