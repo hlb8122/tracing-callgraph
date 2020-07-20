@@ -18,6 +18,9 @@ default = ["smallvec"]
 smallvec = ["tracing-subscriber/smallvec"]
 
 [dependencies]
-tracing-subscriber = { version = "0.2.8", default-features = false, features = ["registry", "fmt"] }
+tracing-subscriber = { version = "0.2.8", default-features = false }
 tracing = "0.1.16"
-petgraph = "0.5.1"
+petgraph = { version = "0.5.1", features = ["graphmap"] }
+
+[dev-dependencies]
+tracing-subscriber = { version = "0.2.8", default-features = false, features = ["registry"] }
