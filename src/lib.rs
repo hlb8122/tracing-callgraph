@@ -100,21 +100,23 @@ type CallGraph = GraphMap<&'static str, usize, Directed>;
 pub struct GraphLayer<S> {
     graph: Arc<Mutex<CallGraph>>,
     _inner: PhantomData<S>,
-    top_node: bool,
+    top_node: Option<&'static str>,
 }
 
 impl<S> GraphLayer<S> {
     /// Add a top node to the graph.
-    pub fn enable_top_node(mut self) -> Self {
-        self.top_node = true;
-        self.graph.lock().unwrap().add_node("top");
+    pub fn enable_top_node(mut self, name: &'static str) -> Self {
+        self = self.disable_top_node();
+        self.top_node = Some(name.clone());
+        self.graph.lock().unwrap().add_node(name);
         self
     }
 
-    /// Remove top node to the graph.
-    pub fn remove_top_node(mut self) -> Self {
-        self.top_node = false;
-        self.graph.lock().unwrap().remove_node("top");
+    /// Remove the top node to the graph.
+    pub fn disable_top_node(mut self) -> Self {
+        if let Some(name) = self.top_node.take() {
+            self.graph.lock().unwrap().remove_node(name);
+        }
         self
     }
 }
@@ -176,7 +178,7 @@ where
         Self {
             graph: Arc::new(Mutex::new(graph)),
             _inner: PhantomData,
-            top_node: false,
+            top_node: None,
         }
     }
 
@@ -226,14 +228,13 @@ where
         let node_b = first.name();
         locked.add_node(node_b);
 
+        // Find parent node
         let node_a = if let Some(parent) = first.parent() {
             parent.name()
+        } else if let Some(name) = self.top_node {
+            name
         } else {
-            if self.top_node {
-                "top"
-            } else {
-                return;
-            }
+            return;
         };
 
         if let Some(weight) = locked.edge_weight_mut(node_a, node_b) {
