@@ -10,6 +10,6 @@ default = ["smallvec"]
 smallvec = ["tracing-subscriber/smallvec"]
 
 [dependencies]
-tracing-subscriber = { version = "0.2.5", default-features = false, features = ["registry", "fmt"] }
-tracing = "0.1.15"
+tracing-subscriber = { version = "0.2.8", default-features = false, features = ["registry", "fmt"] }
+tracing = "0.1.16"
 petgraph = "0.5.1"
