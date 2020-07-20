@@ -1,3 +1,4 @@
+#![allow(clippy::needless_doctest_main)]
 //! A [tracing](https://github.com/tokio-rs/tracing/) [Layer][`GraphLayer`] for generating a call graphs.
 //!
 //! # Overview
@@ -15,7 +16,7 @@
 //!
 //! fn setup_global_subscriber() -> impl Drop {
 //!     let (graph_layer, _guard) = GraphLayer::with_file("./output.dot").unwrap();
-//!     let subscriber = Registry::default().with(flame_layer);
+//!     let subscriber = Registry::default().with(graph_layer);
 //!
 //!     tracing::subscriber::set_global_default(subscriber).expect("Could not set global default");
 //!     _guard
@@ -65,7 +66,6 @@
 )]
 
 pub use error::Error;
-pub use petgraph::dot::Config;
 
 use error::Kind;
 use petgraph::{dot::Dot, graphmap::GraphMap, Directed};
@@ -90,7 +90,7 @@ type CallGraph = GraphMap<&'static str, usize, Directed>;
 /// the [`flush_on_drop`] function, which returns a [`FlushGuard`]. The [`FlushGuard`]
 /// will flush the writer when it is dropped. If necessary, it can also be used to manually
 /// flush the writer.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct GraphLayer {
     graph: Arc<Mutex<CallGraph>>,
     top_node: Option<&'static str>,
@@ -98,6 +98,7 @@ pub struct GraphLayer {
 
 impl GraphLayer {
     /// Add a top node to the graph.
+    #[allow(clippy::clone_double_ref)]
     pub fn enable_top_node(mut self, name: &'static str) -> Self {
         self = self.disable_top_node();
         self.top_node = Some(name.clone());

@@ -2,6 +2,7 @@
 
 A [tracing](https://github.com/tokio-rs/tracing/) library for generating call graphs in [Graphviz](http://www.graphviz.org/) `dot` representation.
 
+[![CI](https://github.com/hlb8122/tracing-callgraph/workflows/CI/badge.svg)](https://github.com/hlb8122/tracing-callgraph/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Cargo](https://img.shields.io/crates/v/tracing-callgraph.svg)](https://crates.io/crates/tracing-callgraph)
 [![Documentation](https://docs.rs/tracing-callgraph/badge.svg)](https://docs.rs/tracing-callgraph)
