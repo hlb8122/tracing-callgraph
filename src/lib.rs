@@ -74,7 +74,6 @@ use petgraph::Directed;
 use std::fs::File;
 use std::io::BufWriter;
 use std::io::Write;
-use std::marker::PhantomData;
 use std::path::Path;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -97,13 +96,12 @@ type CallGraph = GraphMap<&'static str, usize, Directed>;
 /// will flush the writer when it is dropped. If necessary, it can also be used to manually
 /// flush the writer.
 #[derive(Debug)]
-pub struct GraphLayer<S> {
+pub struct GraphLayer {
     graph: Arc<Mutex<CallGraph>>,
-    _inner: PhantomData<S>,
     top_node: Option<&'static str>,
 }
 
-impl<S> GraphLayer<S> {
+impl GraphLayer {
     /// Add a top node to the graph.
     pub fn enable_top_node(mut self, name: &'static str) -> Self {
         self = self.disable_top_node();
@@ -168,16 +166,12 @@ where
     }
 }
 
-impl<S> GraphLayer<S>
-where
-    S: Subscriber + for<'span> LookupSpan<'span>,
-{
+impl GraphLayer {
     /// Returns a new [`GraphLayer`] which constructs the call graph.
     pub fn new() -> Self {
         let graph = CallGraph::new();
         Self {
             graph: Arc::new(Mutex::new(graph)),
-            _inner: PhantomData,
             top_node: None,
         }
     }
@@ -195,10 +189,7 @@ where
     }
 }
 
-impl<S> GraphLayer<S>
-where
-    S: Subscriber + for<'span> LookupSpan<'span>,
-{
+impl GraphLayer {
     /// Constructs a `GraphLayer` that constructs the call graph, and a
     /// `FlushGuard` which writes the graph to a `dot` file when dropped.
     pub fn with_file(path: impl AsRef<Path>) -> Result<(Self, FlushGuard<BufWriter<File>>), Error> {
@@ -216,7 +207,7 @@ where
     }
 }
 
-impl<S> Layer<S> for GraphLayer<S>
+impl<S> Layer<S> for GraphLayer
 where
     S: Subscriber + for<'span> LookupSpan<'span>,
 {
