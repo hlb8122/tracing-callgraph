@@ -25,5 +25,7 @@ fn inner() {}
 fn main() {
     let _guard = setup_global_subscriber();
     outer_a();
+    outer_a();
+    outer_a();
     outer_b();
 }

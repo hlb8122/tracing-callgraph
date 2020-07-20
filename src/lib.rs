@@ -100,6 +100,23 @@ type CallGraph = GraphMap<&'static str, usize, Directed>;
 pub struct GraphLayer<S> {
     graph: Arc<Mutex<CallGraph>>,
     _inner: PhantomData<S>,
+    top_node: bool,
+}
+
+impl<S> GraphLayer<S> {
+    /// Add a top node to the graph.
+    pub fn enable_top_node(mut self) -> Self {
+        self.top_node = true;
+        self.graph.lock().unwrap().add_node("top");
+        self
+    }
+
+    /// Remove top node to the graph.
+    pub fn remove_top_node(mut self) -> Self {
+        self.top_node = false;
+        self.graph.lock().unwrap().remove_node("top");
+        self
+    }
 }
 
 /// An RAII guard for flushing a writer.
@@ -159,6 +176,7 @@ where
         Self {
             graph: Arc::new(Mutex::new(graph)),
             _inner: PhantomData,
+            top_node: false,
         }
     }
 
@@ -208,15 +226,22 @@ where
         let node_b = first.name();
         locked.add_node(node_b);
 
-        if let Some(parent) = first.parent() {
-            let node_a = parent.name();
-            if let Some(weight) = locked.edge_weight_mut(node_a, node_b) {
-                // Increase edge weight
-                *weight += 1;
+        let node_a = if let Some(parent) = first.parent() {
+            parent.name()
+        } else {
+            if self.top_node {
+                "top"
             } else {
-                // Add edge
-                locked.add_edge(node_a, node_b, 1);
+                return;
             }
+        };
+
+        if let Some(weight) = locked.edge_weight_mut(node_a, node_b) {
+            // Increase edge weight
+            *weight += 1;
+        } else {
+            // Add edge
+            locked.add_edge(node_a, node_b, 1);
         }
     }
 }
