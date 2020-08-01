@@ -1,6 +1,6 @@
 [package]
 name = "tracing-callgraph"
-version = "0.1.0-alpha.0"
+version = "0.1.0-alpha.1"
 authors = ["Harry Barber <harrybarber@protonmail.co.uk>"]
 edition = "2018"
 license = "MIT"
@@ -18,9 +18,9 @@ default = ["smallvec"]
 smallvec = ["tracing-subscriber/smallvec"]
 
 [dependencies]
-tracing-subscriber = { version = "0.2.8", default-features = false }
-tracing = "0.1.16"
+tracing-subscriber = { version = "0.2.10", default-features = false }
+tracing = "0.1.18"
 petgraph = { version = "0.5.1", features = ["graphmap"] }
 
 [dev-dependencies]
-tracing-subscriber = { version = "0.2.8", default-features = false, features = ["registry"] }
+tracing-subscriber = { version = "0.2.10", default-features = false, features = ["registry"] }

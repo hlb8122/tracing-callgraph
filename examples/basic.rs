@@ -2,7 +2,8 @@ use tracing_callgraph::GraphLayer;
 use tracing_subscriber::{prelude::*, registry::Registry};
 
 fn setup_global_subscriber() -> impl Drop {
-    let (graph_layer, _guard) = GraphLayer::with_file("./output.dot").unwrap();
+    let (mut graph_layer, _guard) = GraphLayer::with_file("./output.dot").unwrap();
+    graph_layer = graph_layer.enable_top_node("top node");
     let subscriber = Registry::default().with(graph_layer);
 
     tracing::subscriber::set_global_default(subscriber).expect("Could not set global default");
