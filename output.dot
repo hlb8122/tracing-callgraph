@@ -1,7 +1,0 @@
-digraph {
-    0 [ label = "\"outer_a\"" ]
-    1 [ label = "\"inner\"" ]
-    2 [ label = "\"outer_b\"" ]
-    0 -> 1 [ label = "1" ]
-    2 -> 1 [ label = "1" ]
-}
